@@ -9,7 +9,7 @@ Interoperabilidad
 ## Patient
 Creación del recurso paciente con algunos parámetros. 
 
-## Patient
+## Condition
 Creación del recurso condition con algunos parámetros. 
 
 ## Base 
