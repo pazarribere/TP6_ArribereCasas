@@ -3,6 +3,7 @@ from condition import create_condition_resource
 from base import send_resource_to_hapi_fhir, get_resource_from_hapi_fhir, get_patient_by_dni
 
 if __name__ == "__main__":
+    
     # Parámetros del paciente (se puede dejar algunos vacíos)
     family_name = "Barry"
     given_name = "Ben"
@@ -12,15 +13,22 @@ if __name__ == "__main__":
     dni = "41846513"
 
     # Crear y enviar el recurso de paciente
+    print('\n Creando paciente \n')
     patient = create_patient_resource(family_name, given_name, birth_date, gender, phone, dni)
     patient_id = send_resource_to_hapi_fhir(patient, 'Patient')
+
+    print('\n')
 
     # Ver el recurso de paciente creado
     if patient_id:
         get_resource_from_hapi_fhir(patient_id,'Patient')
     
-    get_patient_by_dni(dni)
+    
+    print("\nBuscando paciente por DNI... \n")
+    get_patient_by_dni(41846513)
 
+    print('\n')
+    '''
     condition_resource = create_condition_resource(
         condition_code="Diabetes tipo 2",
         patient_id="12345",
@@ -30,4 +38,4 @@ if __name__ == "__main__":
         condition_id="condition123"
     )
     
-    print(condition_resource.json())
+    print(condition_resource.json())'''

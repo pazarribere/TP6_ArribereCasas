@@ -34,7 +34,6 @@ def create_patient_resource(family_name=None, given_name=None, birth_date=None, 
     
     if dni:
         identifier = Identifier()
-        identifier.system = "dni"
         identifier.value = dni
         patient.identifier = [identifier]
 

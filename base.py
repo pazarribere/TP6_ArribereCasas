@@ -4,7 +4,7 @@ from patient import create_patient_resource
 
 # Enviar el recurso FHIR al servidor HAPI FHIR
 def send_resource_to_hapi_fhir(resource,resource_type):
-    url = f"http://hapi.fhir.org/baseR5/{resource_type}"
+    url = f" https://launch.smarthealthit.org/v/r4/fhir/{resource_type}"
     headers = {"Content-Type": "application/fhir+json"}
     resource_json = resource.json()
 
@@ -22,7 +22,7 @@ def send_resource_to_hapi_fhir(resource,resource_type):
 
 # Buscar el recurso por ID 
 def get_resource_from_hapi_fhir(resource_id, resource_type):
-    url = f"http://hapi.fhir.org/baseR5/{resource_type}/{resource_id}"
+    url = f" https://launch.smarthealthit.org/v/r4/fhir/{resource_type}/{resource_id}"
     response = requests.get(url, headers={"Accept": "application/fhir+json"})
 
     if response.status_code == 200:
@@ -34,24 +34,19 @@ def get_resource_from_hapi_fhir(resource_id, resource_type):
 
 # Buscar el recurso por DNI 
 def get_patient_by_dni(dni):
-    base_url = "http://hapi.fhir.org/baseR5/Patient"
-    
-    # Realizar la búsqueda por identifier
-    query_params = {"identifier": f"http://example.org/fhir/identifier/dni|{dni}"}
+    url = f"https://launch.smarthealthit.org/v/r4/fhir/Patient?identifier={dni}"
     
     # Realizar la solicitud GET
-    response = requests.get(base_url, params=query_params, headers={"Accept": "application/fhir+json"})
+    response = requests.get(url, headers={"Accept": "application/fhir+json"})
     
-    # Verificar el estado de la respuesta
+    # Verificamos si la solicitud fue exitosa
     if response.status_code == 200:
-        patients = response.json()
-        if 'entry' in patients:
-            print(f"Se encontraron {len(patients['entry'])} paciente(s) con el DNI proporcionado.")
-            for entry in patients['entry']:
-                print(entry['resource'])  # Imprimir los recursos encontrados
+        # Si hay pacientes encontrados, mostramos el primero
+        resources = response.json().get('entry', [])
+        if resources:
+            patient = resources[0]['resource']
+            print(f"Paciente encontrado: {patient}")
         else:
-            print("No se encontró ningún paciente con el DNI proporcionado.")
+            print(f"No se encontró ningún paciente con el documento {dni}.")
     else:
         print(f"Error al buscar el paciente: {response.status_code}")
-        print(response.json())
-
